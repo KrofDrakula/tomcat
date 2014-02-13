@@ -1,1 +1,0 @@
-document.querySelector('#list-of-demos').style.display = 'block';
