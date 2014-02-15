@@ -5,7 +5,7 @@ function Vec2(x, y) {
 
 Object.defineProperty(Vec2.prototype, 'length', {
     get        : function() { return Math.sqrt(this.x * this.x + this.y * this.y); },
-    enumerable : true;
+    enumerable : true
 });
 
 Vec2.prototype.add = function(x, y) {
@@ -48,7 +48,7 @@ function Vec3(x, y, z) {
 
 Object.defineProperty(Vec3.prototype, 'length', {
     get        : function() { return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z); },
-    enumerable : true;
+    enumerable : true
 });
 
 Vec3.prototype.add = function(x, y, z) {
