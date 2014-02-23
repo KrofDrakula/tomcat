@@ -73,15 +73,15 @@ $(function() {
         targets.forEach(function(target) {
             target.pos.z -= 40;
         });
-    }
 
-    function render() {
         clouds.forEach(function(cloud) {
             cloud.render(camera, view);
         });
+
         targets.forEach(function(target) {
             target.render(camera, view);
         });
+
         player.render(camera, view);
     }
 
@@ -97,7 +97,6 @@ $(function() {
             init();
             setInterval(function() {
                 update();
-                render();
             }, 16);
         }
     );
