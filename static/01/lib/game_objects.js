@@ -15,11 +15,11 @@ GameObject.prototype.render = function(camera, view) {
         var k = camera.f / cPos.z;
         this.graphic.css({
             display : 'block',
-            left    : (cPos.x - this.width / 2)  * k + view.width / 2  + 'px',
-            top     : (cPos.y - this.height / 2) * k + view.height / 2 + 'px',
-            width   : this.width  * k + 'px',
-            height  : this.height * k + 'px',
-            opacity : Math.min(cPos.z / camera.f, 5/4 -1/(4*camera.f)*cPos.z),
+            left    : Math.round((cPos.x - this.width  / 2) * k + view.width  / 2) + 'px',
+            top     : Math.round((cPos.y - this.height / 2) * k + view.height / 2) + 'px',
+            width   : Math.round(this.width  * k) + 'px',
+            height  : Math.round(this.height * k) + 'px',
+            opacity : Math.min(cPos.z / camera.f, 5/4-1/(4*camera.f)*cPos.z),
             zIndex  : Math.round(1e8 - cPos.z)
         });
     }
