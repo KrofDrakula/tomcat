@@ -7,6 +7,8 @@ function GameObject(pos, graphic, props) {
     this.render  = this.render.bind(this);
 }
 
+EventEmitter.mixin(GameObject.prototype);
+
 GameObject.prototype.render = function(camera, view) {
     var cPos = this.pos.sub(camera.pos);
     if (cPos.z <= 0) {
