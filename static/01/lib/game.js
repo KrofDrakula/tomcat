@@ -17,6 +17,8 @@ $(function() {
     var targetCount = 20;
     var trackLength = 2000;
 
+    var controller = new KeyboardController;
+
 
     function init() {
         var i;
@@ -91,20 +93,32 @@ $(function() {
     }
 
 
-    // wait for resources to load, then kick off the initialisation & game loop
-    preloadImages(
-        [
-            '/assets/cloud.png',
-            '/assets/target.png',
-            '/assets/tomcat.png'
-        ],
-        function() {
-            init();
-            setInterval(function() {
-                update();
-            }, 16);
-        }
-    );
+    // prepare the controller
+    controller.start(function() {
+        // wait for resources to load, then kick off the initialisation & game loop
+        preloadImages(
+            [
+                '/assets/cloud.png',
+                '/assets/target.png',
+                '/assets/tomcat.png'
+            ],
+            function() {
+                init();
+                setInterval(function() {
+                    update();
+                }, 16);
+            }
+        );
+    });
+
+
+    controller.on('engage', function(command) {
+        console.log('engage', command);
+    });
+
+    controller.on('disengage', function(command) {
+        console.log('disengage', command);
+    });
 
 
 
