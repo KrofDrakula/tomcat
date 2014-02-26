@@ -20,6 +20,7 @@ $(function() {
 
     function init() {
         var i;
+
         // generate random clouds, front to back
         for (i = 0; i < cloudCount; i++) {
             clouds.push(
@@ -66,19 +67,23 @@ $(function() {
     function update() {
         clouds.forEach(function(cloud) {
             cloud.pos.z -= 40;
-            if (cloud.pos.z <= camera.pos.z)
+            
+            cloud.render(camera, view);
+            var rect = cloud.getBoundingRect();
+
+            // check if the object is completely outside the view frustrum
+            if (
+                rect.right < -rect.width || rect.left > view.width + rect.width ||
+                rect.top < -rect.height || rect.bottom > view.height + rect.height ||
+                cloud.pos.z <= camera.pos.z
+            ) {
+                // reset the cloud's position way forward again
                 cloud.pos.z += view.width * 5;
+            }
         });
 
         targets.forEach(function(target) {
             target.pos.z -= 40;
-        });
-
-        clouds.forEach(function(cloud) {
-            cloud.render(camera, view);
-        });
-
-        targets.forEach(function(target) {
             target.render(camera, view);
         });
 

@@ -24,3 +24,7 @@ GameObject.prototype.render = function(camera, view) {
         });
     }
 };
+
+GameObject.prototype.getBoundingRect = function() {
+    return this.graphic.get(0).getBoundingClientRect();
+};
