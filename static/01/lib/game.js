@@ -17,6 +17,8 @@ $(function() {
     var targetCount = 20;
     var trackLength = 2000;
 
+    var movementSpeed = 20;
+
     var controller = new KeyboardController;
 
 
@@ -57,6 +59,9 @@ $(function() {
             getImage('tomcat')
         );
 
+        // add player-specific functionality
+        player.velocity = new Vec2(0, 0);
+
         // the camera should start off behind the player, at a distance
         // of focalLength
         camera = {
@@ -89,6 +94,9 @@ $(function() {
             target.render(camera, view);
         });
 
+        player.pos.x += player.velocity.x;
+        player.pos.y += player.velocity.y;
+
         player.render(camera, view);
     }
 
@@ -112,13 +120,21 @@ $(function() {
     });
 
 
-    controller.on('engage', function(command) {
-        console.log('engage', command);
-    });
+    controller.on('engage', updatePlayer);
+    controller.on('disengage', updatePlayer);
 
-    controller.on('disengage', function(command) {
-        console.log('disengage', command);
-    });
+    function updatePlayer() {
+        var commandSet = controller.getCommandSet();
+        if (commandSet.left ^ commandSet.right)
+            player.velocity.x = commandSet.left ? -movementSpeed : movementSpeed;
+        else
+            player.velocity.x = 0;
+        
+        if (commandSet.up ^ commandSet.down)
+            player.velocity.y = commandSet.up ? -movementSpeed : movementSpeed;
+        else
+            player.velocity.y = 0;
+    }
 
 
 

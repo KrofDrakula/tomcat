@@ -4,12 +4,18 @@ function GameController() {
 
 EventEmitter.mixin(GameController.prototype);
 
+GameController.commands = ['left', 'up', 'right', 'down'];
+
 GameController.prototype.start = function(callback) {
     throw new Exception('Not implemented');
 };
 
 GameController.prototype.stop = function() {
     throw new Exception('Not implemented');
+};
+
+GameController.prototype.getCommandSet = function() {
+    return { left: false, up: false, right: false, down: false };
 };
 
 
@@ -27,6 +33,13 @@ KeyboardController.keymap = {
     '38' : 'up',
     '39' : 'right',
     '40' : 'down'
+};
+
+KeyboardController.lookup = {
+    left  : '37',
+    up    : '38',
+    right : '39',
+    down  : '40'
 };
 
 KeyboardController.validKeys = Object.keys(KeyboardController.keymap);
@@ -62,6 +75,10 @@ KeyboardController.prototype.isValidKey = function(code) {
     return KeyboardController.validKeys.indexOf(code) > -1;
 }
 
-KeyboardController.prototype.getActiveCommands = function() {
-    return this.keysPressed.map(function(code) { return KeyboardController.keymap[code]; });
+KeyboardController.prototype.getCommandSet = function() {
+    var ret = {};
+    GameController.commands.forEach(function(command) {
+        ret[command] = this.keysPressed.indexOf(KeyboardController.lookup[command]) > -1;
+    }, this);
+    return ret;
 };
