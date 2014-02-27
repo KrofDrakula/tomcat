@@ -9,7 +9,7 @@ Object.defineProperty(Vec2.prototype, 'length', {
 });
 
 Vec2.prototype.add = function(x, y) {
-    if (x instanceof Vec2)            return new Vec2(this.x + x.x, this.y, x.y);
+    if (x instanceof Vec2)            return new Vec2(this.x + x.x, this.y + x.y);
     else if (typeof y == 'undefined') return new Vec2(this.x + x,   this.y + x);
     else                              return new Vec2(this.x + x,   this.y + y);
 };
