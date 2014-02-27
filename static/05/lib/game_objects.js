@@ -2,8 +2,8 @@ function GameObject(pos, graphic, props) {
     this.pos      = pos;
     this.graphic  = graphic;
     this.props    = props || {};
-    this.width    = graphic.get(0).naturalWidth;
-    this.height   = graphic.get(0).naturalHeight;
+    this.width    = graphic.naturalWidth;
+    this.height   = graphic.naturalHeight;
     this.render   = this.render.bind(this);
     this.rotation = 0;
 }
@@ -11,25 +11,24 @@ function GameObject(pos, graphic, props) {
 EventEmitter.mixin(GameObject.prototype);
 
 GameObject.prototype.render = function(camera, view) {
-    var cPos = this.pos.clone().sub(camera.pos);
-    if (cPos.z <= 0) {
-        this.graphic.css({display: 'none'});
+    var z = this.pos.z - camera.pos.z;
+    if (z <= 0) {
+        this.graphic.style.display = 'none';
     } else {
-        this.graphic.css({
-            display         : 'block',
-            transform       : this.getTransformString(camera, view),
-            transformOrigin : '0 0',
-            opacity         : Math.min(cPos.z / camera.f, 5/4-1/(4*camera.f)*cPos.z),
-            zIndex          : Math.round(1e8 - cPos.z)
-        });
+        var style = this.graphic.style;
+        style.display               = 'block';
+        style.webkitTransform       = this.getTransformMatrix(camera, view);
+        style.webkitTransformOrigin = '0 0',
+        style.opacity               = Math.min(z / camera.f, 5/4-1/(4*camera.f)*z);
+        style.zIndex                = Math.round(1e8 - z);
     }
 };
 
 GameObject.prototype.getTransformString = function(camera, view) {
-    var cPos = this.pos.clone().sub(camera.pos),
-        k = camera.f / cPos.z,
-        x = (cPos.x - this.width  / 2) * k + view.width  / 2,
-        y = (cPos.y - this.height / 2) * k + view.height / 2;
+    var k = camera.f / (this.pos.z - camera.pos.z),
+        x = (this.pos.x - camera.pos.x - this.width  / 2) * k + view.width  / 2,
+        y = (this.pos.y - camera.pos.y - this.height / 2) * k + view.height / 2,
+        r = this.rotation / 180 * Math.PI;
 
     return 'translate3d(' + x + 'px, ' + y + 'px, 0) ' +
            'scale(' + k + ') ' +
@@ -38,6 +37,30 @@ GameObject.prototype.getTransformString = function(camera, view) {
            'translate3d(' + (-this.width/2) + 'px, ' + (-this.height/2) + 'px, 0)';
 };
 
+
+(function() {
+
+    var m = new WebKitCSSMatrix,
+        reset = 'matrix3d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1)';
+
+    GameObject.prototype.getTransformMatrix = function(camera, view) {
+        var k = camera.f / (this.pos.z - camera.pos.z),
+            x = (this.pos.x - camera.pos.x - this.width  / 2) * k + view.width  / 2,
+            y = (this.pos.y - camera.pos.y - this.height / 2) * k + view.height / 2,
+            r = this.rotation / 180 * Math.PI;
+
+        m.setMatrixValue(reset);
+
+        m = m.translate(x, y, 0);
+        m = m.rotate(r);
+        m = m.scale(k);
+        m.m43 = 0.00001;
+
+        return m;
+    };
+
+})();
+
 GameObject.prototype.getBoundingRect = function() {
-    return this.graphic.get(0).getBoundingClientRect();
+    return this.graphic.getBoundingClientRect();
 };

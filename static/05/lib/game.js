@@ -1,10 +1,10 @@
-$(function() {
+(function() {
 
-    var container = $('#viewport');
+    var container = document.querySelector('#viewport');
     
     var view = {
-        width  : container.width(),
-        height : container.height()
+        width  : container.offsetWidth,
+        height : container.offsetHeight
     };
 
     var clouds      = [];
@@ -72,43 +72,32 @@ $(function() {
 
     }
 
-    function update() {
-        clouds.forEach(function(cloud) {
-            cloud.pos.z -= trackSpeed;
-        });
+    function moveObjectAlongTrack(obj) { obj.pos.z -= trackSpeed; }
 
-        targets.forEach(function(target) {
-            target.pos.z -= trackSpeed;
-        });
+    function update() {
+        clouds.forEach(moveObjectAlongTrack);
+
+        targets.forEach(moveObjectAlongTrack);
 
         player.pos.x += player.velocity.x;
         player.pos.y += player.velocity.y;
 
         player.render(camera, view);
+    }
+
+    function renderGameObject(obj) { obj.render(camera, view); }
+
+    function checkBounds(obj) {
+        if (obj.pos.z <= camera.pos.z)
+            obj.pos.z += view.width * 5;
     }
 
     function render() {
-        clouds.forEach(function(cloud) {
-            cloud.render(camera, view);
-        });
+        clouds.forEach(renderGameObject);
 
-        targets.forEach(function(target) {
-            target.render(camera, view);
-        });
+        targets.forEach(renderGameObject);
 
-        clouds.forEach(function(cloud) {
-            var rect = cloud.getBoundingRect();
-
-            // check if the object is completely outside the view frustrum
-            if (
-                rect.right < -rect.width || rect.left > view.width + rect.width ||
-                rect.top < -rect.height || rect.bottom > view.height + rect.height ||
-                cloud.pos.z <= camera.pos.z
-            ) {
-                // reset the cloud's position way forward again
-                cloud.pos.z += view.width * 5;
-            }
-        });
+        clouds.forEach(checkBounds);
 
         player.pos.x += player.velocity.x;
         player.pos.y += player.velocity.y;
@@ -116,6 +105,11 @@ $(function() {
         player.render(camera, view);
     }
 
+    function tick() {
+        nextFrame(tick);
+        update();
+        render();
+    }
 
     // prepare the controller
     controller.start(function() {
@@ -128,11 +122,7 @@ $(function() {
             ],
             function() {
                 init();
-                nextFrame(function tick() {
-                    nextFrame(tick);
-                    update();
-                    render();
-                });
+                tick();
             }
         );
     });
@@ -176,7 +166,11 @@ $(function() {
     }
 
     function getImage(name) {
-        return $('<img class="game-object"/>').attr('src', '/assets/' + name + '.png').appendTo(container);
+        var img = document.createElement('img');
+        img.className = 'game-object';
+        img.src = '/assets/' + name + '.png';
+        container.appendChild(img);
+        return img;
     }
 
     // Lazy requestAnimationFrame polyfill.
@@ -193,4 +187,4 @@ $(function() {
         };
     })();
 
-});
+})();
