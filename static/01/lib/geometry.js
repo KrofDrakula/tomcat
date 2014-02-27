@@ -25,9 +25,9 @@ Vec2.prototype.sub = function(x, y) {
 };
 
 Vec2.prototype.scale = function(a, b) {
-    if (a instanceof Vec2)       return new Vec2(this.x * a.x, this.y * a.y);
-    if (typeof b == 'undefined') return new Vec2(this.x * a,   this.y * a);
-    else                         return new Vec2(this.x * a,   this.y * b);
+    if (a instanceof Vec2)            return new Vec2(this.x * a.x, this.y * a.y);
+    else if (typeof b == 'undefined') return new Vec2(this.x * a,   this.y * a);
+    else                              return new Vec2(this.x * a,   this.y * b);
 };
 
 Vec2.prototype.dot = function(x, y) {
