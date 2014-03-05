@@ -22,6 +22,10 @@
 
     var controller = new KeyboardController;
 
+    function updateView() {
+        view.width = container.width();
+        view.height = container.height();
+    }
 
     function init() {
         var i;
@@ -69,6 +73,9 @@
             pos : new Vec3(player.pos.x, player.pos.y, player.pos.z - focalLength),
             f   : focalLength
         };
+
+        $(window).on('resize', updateView);
+        update();
 
     }
 
