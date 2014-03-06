@@ -1,6 +1,14 @@
 (function() {
 
     var container = document.querySelector('#viewport');
+
+    var canvas = document.createElement('canvas');
+    canvas.style.width = canvas.style.height = '100%';
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
+    container.appendChild(canvas);
+
+    var ctx = canvas.getContext('2d');
     
     var view = {
         width  : container.offsetWidth,
@@ -23,8 +31,8 @@
     var controller = new KeyboardController;
 
     function updateView() {
-        view.width = container.width();
-        view.height = container.height();
+        view.width = canvas.width = container.offsetWidth;
+        view.height = canvas.height = container.offsetHeight;
     }
 
     function init() {
@@ -89,10 +97,10 @@
         player.pos.x += player.velocity.x;
         player.pos.y += player.velocity.y;
 
-        player.render(camera, view);
+        player.render(camera, view, ctx);
     }
 
-    function renderGameObject(obj) { obj.render(camera, view); }
+    function renderGameObject(obj) { obj.render(camera, view, ctx); }
 
     function checkBounds(obj) {
         if (obj.pos.z <= camera.pos.z)
@@ -100,6 +108,8 @@
     }
 
     function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         clouds.forEach(renderGameObject);
 
         targets.forEach(renderGameObject);
@@ -109,7 +119,7 @@
         player.pos.x += player.velocity.x;
         player.pos.y += player.velocity.y;
 
-        player.render(camera, view);
+        player.render(camera, view, ctx);
     }
 
     function tick() {
