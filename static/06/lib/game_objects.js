@@ -60,7 +60,3 @@ GameObject.prototype.getTransformString = function(camera, view) {
     };
 
 })();
-
-GameObject.prototype.getBoundingRect = function() {
-    return this.graphic.getBoundingClientRect();
-};
