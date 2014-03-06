@@ -1,6 +1,8 @@
 # Tomcat
 
-An exercise in high-performance graphics and JS
+An exercise in high-performance graphics and JS.
+
+![](http://i.imgur.com/Ev0Ma8u.gif)
 
 ## Running the examples
 
