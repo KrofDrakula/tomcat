@@ -4,6 +4,8 @@ An exercise in high-performance graphics and JS.
 
 ![](http://i.imgur.com/Ev0Ma8u.gif)
 
+Read the accompanying slides: https://speakerdeck.com/krofdrakula/fast-and-furious-javascript
+
 ## Running the examples
 
 If you don't have a web server you can put these examples on, install [Node](http://nodejs.org/), then from the project root, do:
